@@ -1,2 +1,37 @@
+# Byte-compiled / optimized / DLL files
 __pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual Environment
+venv/
+env/
+.venv/
+.ENV/
+env.bak/
+Env/
+
+# macOS metadata files
+.DS_Store
+
+# Logs
+*.log
+
+# Environment variable files
+.env
+.venv
+
+# IDE-specific files
 .idea/
+.vscode/
+*.sublime-project
+*.sublime-workspace
+
+# Distribution files
+build/
+dist/
+
+# Editor backups and temporary files
+*~
+*.swp
+*.swo
