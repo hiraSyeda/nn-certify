@@ -111,7 +111,3 @@ python test.py
 - Even a simple 3-layer network can effectively classify MNIST digits with reasonable accuracy given limited data.
 - Exported weights, biases, and metadata provide transparency and reproducibility of the model's structure.
 - This project is a foundational step in understanding neural networks without relying on external libraries like TensorFlow or PyTorch.
-
----
-
-Feel free to explore and extend the project further!
