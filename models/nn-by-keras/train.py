@@ -6,6 +6,27 @@ import keras
 from keras import layers
 from keras import datasets as ds
 
+"""
+train.py
+
+This script trains a fully connected (Dense) neural network with 2 layers on the MNIST dataset.
+The network is designed as follows:
+    - Input Layer: 784 nodes (28x28 flattened grayscale images)
+    - Hidden Layer: 200 nodes with ReLU activation
+    - Output Layer: 10 nodes with Softmax activation (for 10 classes: digits 0-9)
+
+Model Features:
+    - Optimizer: Adam (adaptive learning rate)
+    - Loss Function: Categorical Crossentropy (for multi-class classification)
+    - Metrics: Accuracy
+
+Outputs:
+    - Model saved in `.keras` format for reuse.
+    - Metadata (JSON): Input, hidden, and output layer details, optimizer configuration, and accuracy.
+    - Predictions (CSV): Test set predictions, including the correct label, predicted label, and probabilities.
+    - Weights and Biases (CSV): Layer weights and biases for reproducibility and analysis.
+"""
+
 # Define key parameters for the neural network
 INPUT_NODES = 784
 HIDDEN_NODES = 200
