@@ -2,6 +2,9 @@ import csv
 import os
 import json
 import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+from sklearn.metrics import confusion_matrix
 import keras
 from keras import layers
 from keras import datasets as ds
@@ -37,12 +40,15 @@ BATCH_SIZE = 32
 output_dir = "outputs"
 csv_dir = os.path.join(output_dir, "csv")
 models_dir = os.path.join(output_dir, "models")
+analysis_dir = os.path.join(output_dir, "analysis")
 
 # Explicitly create directories
 if not os.path.exists(csv_dir):
     os.makedirs(csv_dir)
 if not os.path.exists(models_dir):
     os.makedirs(models_dir)
+if not os.path.exists(analysis_dir):
+    os.makedirs(analysis_dir)
 
 # Step 1: Load and Preprocess the Data
 (x_train, y_train), (x_test, y_test) = ds.mnist.load_data()
@@ -70,7 +76,7 @@ model.compile(
 )
 
 # Step 4: Train the Model
-model.fit(
+history = model.fit(  # Capture the training history
     x_train, y_train,
     validation_data=(x_test, y_test),
     epochs=EPOCHS,
@@ -149,5 +155,58 @@ test_results = {
 }
 with open(os.path.join(models_dir, "test_results.json"), "w") as f:
     json.dump(test_results, f, indent=4)
+
+# Generate Confusion Matrix
+true_labels = np.argmax(y_test, axis=1)
+predicted_labels = np.argmax(predictions, axis=1)
+conf_matrix = confusion_matrix(true_labels, predicted_labels)
+
+plt.figure(figsize=(10, 6))
+sns.heatmap(conf_matrix, annot=True, fmt='d', cmap='Blues', xticklabels=list(range(10)), yticklabels=list(range(10)))
+plt.title(
+    "Confusion Matrix\n\nA table comparing the model's predictions to actual labels.\nDiagonal cells: "
+    "Correct predictions.\nOff-diagonal cells: Misclassifications.",
+    loc='left')
+plt.xlabel("Predicted Label")
+plt.ylabel("True Label")
+conf_matrix_path = os.path.join(analysis_dir, "confusion_matrix.png")
+plt.savefig(conf_matrix_path)
+plt.close()
+
+# Generate Learning Curves
+plt.figure(figsize=(14, 7))
+
+# Accuracy Curve
+plt.subplot(1, 2, 1)
+plt.plot(history.history['accuracy'], label='Training Accuracy', marker='o')
+plt.plot(history.history['val_accuracy'], label='Validation Accuracy', linestyle='--', marker='o')
+plt.title(
+    "Learning Curve: Accuracy\n\nShows how accuracy changes during training and validation.\n"
+    "Helps identify overfitting (training >> validation accuracy).",
+    loc='left')
+plt.xlabel("Epoch")
+plt.ylabel("Accuracy")
+plt.legend()
+
+# Loss Curve
+plt.subplot(1, 2, 2)
+plt.plot(history.history['loss'], label='Training Loss', marker='o')
+plt.plot(history.history['val_loss'], label='Validation Loss', linestyle='--', marker='o')
+plt.title(
+    "Learning Curve: Loss\n\nDisplays the model's loss values during training and validation.\n"
+    "Helps diagnose underfitting or overfitting issues.",
+    loc='left')
+plt.xlabel("Epoch")
+plt.ylabel("Loss")
+plt.legend()
+
+# Save the learning curve
+learning_curve_path = os.path.join(analysis_dir, "learning_curves.png")
+plt.tight_layout()
+plt.savefig(learning_curve_path)
+plt.close()
+
+print(f"Confusion matrix saved at {conf_matrix_path}")
+print(f"Learning curves saved at {learning_curve_path}")
 
 print("All outputs saved successfully.")
