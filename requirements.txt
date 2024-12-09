@@ -7,6 +7,7 @@ cycler==0.12.1
 flatbuffers==24.3.25
 fonttools==4.55.2
 gast==0.6.0
+gloro==1.1.1
 google-pasta==0.2.0
 grpcio==1.68.1
 h5py==3.12.1
